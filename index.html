@@ -121,13 +121,20 @@ a:hover {
 
 <div class="card">
   <h2>Último video</h2>
-  <iframe id="latestVideo" width="100%" height="315" allowfullscreen></iframe>
+
+  <!-- fallback SIEMPRE FUNCIONA -->
+  <iframe id="latestVideo" width="100%" height="315"
+  src="https://www.youtube.com/embed?listType=user_uploads&list=UC2dwyoEYWTsuUprHKU30s4g"
+  allowfullscreen>
+  </iframe>
+
 </div>
 
 <div class="card">
   <h2>Playlist</h2>
-  <iframe width="100%" height="600"
-  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg">
+  <iframe width="100%" height="400"
+  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg"
+  allowfullscreen>
   </iframe>
 </div>
 
@@ -135,7 +142,7 @@ a:hover {
   <h2>En vivo</h2>
   <iframe
   src="https://player.twitch.tv/?channel=litaxvt&parent=craxkerssj.github.io"
-  height="500"
+  height="400"
   width="100%">
   </iframe>
 </div>
@@ -157,18 +164,6 @@ a:hover {
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
-
-// Último video automático (simple)
-const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
-
-fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
-.then(response => response.text())
-.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-.then(data => {
-  const videoId = data.querySelector("entry > id").textContent.split(":")[2];
-  document.getElementById("latestVideo").src =
-    "https://www.youtube.com/embed/" + videoId;
-});
 </script>
 
 </body>
