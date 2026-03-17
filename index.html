@@ -68,6 +68,16 @@ h1 {
   cursor: pointer;
 }
 
+.character {
+  width: 120px;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.character:hover {
+  transform: scale(1.1);
+}
+
 #subCount {
   font-size: 40px;
   text-align: center;
@@ -102,8 +112,27 @@ h1 {
 </div>
 
 <div class="card">
+  <h2>Playlist</h2>
+  <iframe width="100%" height="400"
+  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg"
+  allowfullscreen>
+  </iframe>
+</div>
+
+<div class="card">
   <h2>En vivo</h2>
   <iframe id="twitchFrame" height="400" width="100%"></iframe>
+</div>
+
+<div class="card">
+  <h2>Referencias</h2>
+  <img class="character" src="callofthenight.png">
+  <img class="character" src="nazokanojo.png">
+</div>
+
+<div class="card">
+  <h2>Ir al blog</h2>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
 </div>
 
 </div>
@@ -116,7 +145,7 @@ function toggleTheme() {
 const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
 
 /* =========================
-   FIX VIDEO (RSS REAL)
+   VIDEO (FUNCIONANDO)
 ========================= */
 fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
 .then(res => res.json())
@@ -131,30 +160,42 @@ fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feed
 });
 
 /* =========================
-   FIX SUBS (MEJORADO)
+   SUBS (DOBLE API)
 ========================= */
 async function getSubs() {
   try {
+    // API 1
     const res = await fetch(`https://api.socialcounts.org/youtube-live-subscriber-count/${channelID}`);
     const data = await res.json();
 
-    if(data.est_sub_count){
+    if (data.est_sub_count) {
       document.getElementById("subCount").innerText =
         data.est_sub_count.toLocaleString();
-    } else {
-      throw "fail";
+      return;
     }
 
+    throw "fail";
+
   } catch {
-    document.getElementById("subCount").innerText = "???";
+    try {
+      // API 2 (fallback)
+      const res2 = await fetch(`https://api.counterapi.dev/v1/youtube/${channelID}`);
+      const data2 = await res2.json();
+
+      document.getElementById("subCount").innerText =
+        (data2.count || "???").toLocaleString();
+
+    } catch {
+      document.getElementById("subCount").innerText = "???";
+    }
   }
 }
 
 getSubs();
-setInterval(getSubs, 15000);
+setInterval(getSubs, 20000);
 
 /* =========================
-   TWITCH AUTO FIX
+   TWITCH
 ========================= */
 const channel = "litaxvt";
 const parent = window.location.hostname;
