@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Base Veneka</title>
+<title>Base Veneka de Litax</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
 
@@ -100,6 +100,12 @@ a:hover {
   .character {
     width: 80px;
   }
+
+  #subCount {
+  font-size: 40px;
+  text-align: center;
+  color: var(--accent2);
+  }
 }
 </style>
 </head>
@@ -117,6 +123,11 @@ a:hover {
   <a class="btn" href="https://youtube.com/@litaxvnz" target="_blank">YouTube</a>
   <a class="btn" href="https://www.twitch.tv/litaxvt" target="_blank">Twitch</a>
   <a class="btn" href="https://TU_BLOG.blogspot.com">Blog</a>
+</div>
+
+  <div class="card">
+  <h2>Suscriptores</h2>
+  <h1 id="subCount">Cargando...</h1>
 </div>
 
 <div class="card">
@@ -164,6 +175,24 @@ a:hover {
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
+
+const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
+
+async function getSubs() {
+  try {
+    const res = await fetch(`https://api.socialcounts.org/youtube-live-subscriber-count/${channelID}`);
+    const data = await res.json();
+
+    document.getElementById("subCount").innerText =
+      data.est_sub_count.toLocaleString();
+  } catch {
+    document.getElementById("subCount").innerText = "No disponible";
+  }
+}
+
+// actualizar cada 10s
+getSubs();
+setInterval(getSubs, 10000);
 </script>
 
 </body>
